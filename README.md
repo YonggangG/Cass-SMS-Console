@@ -4,6 +4,10 @@ Cass SMS Console is a lightweight LAN web console for [Cass SMS Gateway](https:/
 
 > Chinese documentation: [README.zh-CN.md](README.zh-CN.md)
 
+## Screenshot
+
+![Cass SMS Console web UI](docs/images/cass-sms-console-screenshot.jpg)
+
 ## Features
 
 - Show whether the phone-side Cass SMS Gateway is online or offline

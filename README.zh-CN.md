@@ -4,6 +4,10 @@ Cass SMS Console 是 [Cass SMS Gateway](https://github.com/YonggangG/cass-sms-ga
 
 英文文档： [README.md](README.md)
 
+## 截图
+
+![Cass SMS Console 网页界面](docs/images/cass-sms-console-screenshot.jpg)
+
 ## 功能
 
 - 显示手机端 Cass SMS Gateway 在线 / 离线状态

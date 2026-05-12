@@ -118,11 +118,9 @@ async function sendSms() {
     });
     $('sendResult').textContent = result.ok === false
       ? `失败：${result.error || 'unknown'}`
-      : result.warning
-        ? `已提交发送；手机端确认超时，请以最近短信/对方收到为准。${result.warning}`
-        : '已提交发送，并已同步记录';
+      : '已提交发送';
     $('text').value = '';
-    await refresh(true);
+    setTimeout(() => refresh(true).catch(() => {}), 1000);
   } catch (err) {
     $('sendResult').textContent = `失败：${err.message}`;
   } finally {

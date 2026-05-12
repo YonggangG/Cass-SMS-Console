@@ -166,12 +166,6 @@ function startSync() {
   syncTimer = setInterval(syncOnce, Math.max(1000, Number(config.syncIntervalMs) || 3000));
 }
 
-function isAbortLikeError(err) {
-  const name = String(err?.name || '').toLowerCase();
-  const message = String(err?.message || err || '').toLowerCase();
-  return name.includes('abort') || message.includes('abort') || message.includes('operation was aborted');
-}
-
 function sendJson(res, status, data) {
   const body = JSON.stringify(data);
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': Buffer.byteLength(body) });
@@ -210,24 +204,20 @@ async function handleApi(req, res, url) {
       const raw = await readBody(req);
       const payload = JSON.parse(raw || '{}');
       if (!payload.to || !payload.text) return sendJson(res, 400, { ok: false, error: 'to and text are required' });
-      let result;
-      try {
-        result = await callGateway('/api/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }, 30000);
-      } catch (err) {
-        if (!isAbortLikeError(err)) throw err;
-        result = {
-          ok: true,
-          warning: 'Phone gateway confirmation timed out after 30s. The SMS request may already have been submitted; check recent messages or the recipient device.',
-          to: payload.to,
-          subscriptionId: payload.subscriptionId
-        };
-      }
-      await syncOnce();
-      return sendJson(res, 200, result);
+      callGateway('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(() => syncOnce()).catch(err => {
+        lastStatus = { ...lastStatus, sendWarning: err.message || String(err), sendWarningAt: new Date().toISOString() };
+      });
+      return sendJson(res, 200, {
+        ok: true,
+        submitted: true,
+        to: payload.to,
+        subscriptionId: payload.subscriptionId,
+        message: 'SMS send request submitted to the phone gateway.'
+      });
     }
     if (req.method === 'POST' && url.pathname === '/api/sync') {
       return sendJson(res, 200, await syncOnce());

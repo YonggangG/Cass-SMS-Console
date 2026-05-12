@@ -6,7 +6,17 @@ Cass SMS Console 是 [Cass SMS Gateway](https://github.com/YonggangG/cass-sms-ga
 
 ## 截图
 
-![Cass SMS Console 网页界面](docs/images/cass-sms-console-screenshot.jpg)
+### Android Gateway 设置页
+
+![Cass SMS Gateway Android 设置页](docs/images/cass-sms-gateway-android.jpg)
+
+### 桌面网页控制台
+
+![Cass SMS Console 桌面网页界面](docs/images/cass-sms-console-screenshot.jpg)
+
+### 手机网页控制台
+
+![Cass SMS Console 手机网页界面](docs/images/cass-sms-console-mobile.jpg)
 
 ## 功能
 

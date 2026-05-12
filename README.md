@@ -36,7 +36,7 @@ Image tag:
 ghcr.io/yonggangg/cass-sms-console:latest
 ```
 
-The v0.1.0 GitHub Release also includes a prebuilt Docker image archive. If direct GHCR pulling is unavailable, download and load the release asset on the target Docker host first.
+The GHCR image can be pulled directly. The v0.1.0 GitHub Release also includes a prebuilt Docker image archive for offline installation.
 
 ```bash
 curl -L -o cass-sms-console-v0.1.0-docker-image.tar.gz \
@@ -68,7 +68,6 @@ services:
     image: ghcr.io/yonggangg/cass-sms-console:latest
     container_name: cass-sms-console
     restart: unless-stopped
-    pull_policy: never
     ports:
       - "3000:3000"
     environment:

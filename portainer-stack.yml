@@ -3,7 +3,6 @@ services:
     image: ghcr.io/yonggangg/cass-sms-console:latest
     container_name: cass-sms-console
     restart: unless-stopped
-    pull_policy: never
     ports:
       - "3000:3000"
     environment:

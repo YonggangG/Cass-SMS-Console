@@ -1,0 +1,8 @@
+{
+  "phoneBaseUrl": "http://192.168.1.23:8080",
+  "token": "PASTE_PHONE_TOKEN_HERE",
+  "host": "0.0.0.0",
+  "port": 3000,
+  "syncIntervalMs": 3000,
+  "csvPath": "./data/sms-records.csv"
+}

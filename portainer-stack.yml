@@ -1,0 +1,17 @@
+services:
+  cass-sms-console:
+    image: ghcr.io/yonggangg/cass-sms-console:latest
+    container_name: cass-sms-console
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      CASS_PHONE_BASE_URL: "http://192.168.1.23:8080"
+      CASS_TOKEN: "PASTE_PHONE_TOKEN_HERE"
+      CASS_SYNC_INTERVAL_MS: "3000"
+      CASS_CSV_PATH: "/data/sms-records.csv"
+    volumes:
+      - cass-sms-data:/data
+
+volumes:
+  cass-sms-data:

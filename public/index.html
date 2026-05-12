@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cass SMS PC Console</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Cass SMS PC Console</h1>
+      <p>局域网电脑端短信控制台，本地 CSV 自动备份。</p>
+    </div>
+    <button id="syncBtn">立即同步</button>
+  </header>
+
+  <main>
+    <section class="card status-card">
+      <h2>Gateway 状态</h2>
+      <div id="statusPill" class="pill gray">检查中</div>
+      <div class="grid">
+        <div><span>手机地址</span><b id="phoneBaseUrl">-</b></div>
+        <div><span>最近检查</span><b id="checkedAt">-</b></div>
+        <div><span>手机消息数</span><b id="messageCount">-</b></div>
+        <div><span>CSV 文件</span><b id="csvPath">-</b></div>
+      </div>
+      <pre id="statusDetail"></pre>
+    </section>
+
+    <section class="card">
+      <h2>发送短信</h2>
+      <label>SIM/eSIM</label>
+      <select id="sim"></select>
+      <label>号码</label>
+      <input id="to" placeholder="+1... 或本地号码">
+      <label>内容</label>
+      <textarea id="text" rows="5" placeholder="短信内容"></textarea>
+      <div class="row">
+        <button id="sendBtn">发送</button>
+        <span id="sendResult"></span>
+      </div>
+    </section>
+
+    <section class="card wide">
+      <div class="row between">
+        <h2>收/发记录</h2>
+        <input id="filter" placeholder="筛选号码、内容、状态...">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>时间</th>
+              <th>方向</th>
+              <th>号码</th>
+              <th>SIM</th>
+              <th>状态</th>
+              <th>内容</th>
+            </tr>
+          </thead>
+          <tbody id="messages"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

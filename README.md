@@ -44,6 +44,7 @@ The phone still sends and receives SMS. This console is only the LAN-side web UI
 
 ## Release Notes
 
+- v0.1.2: Avoid false "operation aborted" send failures by allowing longer phone-gateway confirmation time and showing a submitted/timeout warning when confirmation is delayed.
 - v0.1.1: Keep the selected SIM/eSIM fixed across automatic 3-second status refreshes.
 
 ## Docker Image
@@ -54,12 +55,12 @@ Image tag:
 ghcr.io/yonggangg/cass-sms-console:latest
 ```
 
-The GHCR image can be pulled directly. The v0.1.1 GitHub Release also includes a prebuilt Docker image archive for offline installation.
+The GHCR image can be pulled directly. The v0.1.2 GitHub Release also includes a prebuilt Docker image archive for offline installation.
 
 ```bash
-curl -L -o cass-sms-console-v0.1.1-docker-image.tar.gz \
-  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.1/cass-sms-console-v0.1.1-docker-image.tar.gz
-gzip -dc cass-sms-console-v0.1.1-docker-image.tar.gz | docker load
+curl -L -o cass-sms-console-v0.1.2-docker-image.tar.gz \
+  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.2/cass-sms-console-v0.1.2-docker-image.tar.gz
+gzip -dc cass-sms-console-v0.1.2-docker-image.tar.gz | docker load
 ```
 
 ## Quick Start with Portainer

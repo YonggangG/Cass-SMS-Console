@@ -64,10 +64,10 @@ function gatewayUrl(apiPath) {
   return `${base}${apiPath}${sep}token=${encodeURIComponent(config.token || '')}`;
 }
 
-async function callGateway(apiPath, options = {}) {
+async function callGateway(apiPath, options = {}, timeoutMs = 8000) {
   if (!config.token) throw new Error('Missing token. Set CASS_TOKEN or pc-console/config.json');
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(gatewayUrl(apiPath), { ...options, signal: controller.signal });
     const text = await res.text();
@@ -204,11 +204,22 @@ async function handleApi(req, res, url) {
       const raw = await readBody(req);
       const payload = JSON.parse(raw || '{}');
       if (!payload.to || !payload.text) return sendJson(res, 400, { ok: false, error: 'to and text are required' });
-      const result = await callGateway('/api/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      let result;
+      try {
+        result = await callGateway('/api/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }, 30000);
+      } catch (err) {
+        if (err.name !== 'AbortError') throw err;
+        result = {
+          ok: true,
+          warning: 'Phone gateway confirmation timed out after 30s. The SMS request may already have been submitted; check recent messages or the recipient device.',
+          to: payload.to,
+          subscriptionId: payload.subscriptionId
+        };
+      }
       await syncOnce();
       return sendJson(res, 200, result);
     }

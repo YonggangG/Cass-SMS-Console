@@ -166,6 +166,12 @@ function startSync() {
   syncTimer = setInterval(syncOnce, Math.max(1000, Number(config.syncIntervalMs) || 3000));
 }
 
+function isAbortLikeError(err) {
+  const name = String(err?.name || '').toLowerCase();
+  const message = String(err?.message || err || '').toLowerCase();
+  return name.includes('abort') || message.includes('abort') || message.includes('operation was aborted');
+}
+
 function sendJson(res, status, data) {
   const body = JSON.stringify(data);
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': Buffer.byteLength(body) });
@@ -212,7 +218,7 @@ async function handleApi(req, res, url) {
           body: JSON.stringify(payload)
         }, 30000);
       } catch (err) {
-        if (err.name !== 'AbortError') throw err;
+        if (!isAbortLikeError(err)) throw err;
         result = {
           ok: true,
           warning: 'Phone gateway confirmation timed out after 30s. The SMS request may already have been submitted; check recent messages or the recipient device.',

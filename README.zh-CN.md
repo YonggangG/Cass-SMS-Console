@@ -44,6 +44,7 @@ Cass SMS Console :3000
 
 ## 版本说明
 
+- v0.1.3：更稳地识别发送确认阶段的 abort，包括 “This operation was aborted” 这类运行时错误文案。
 - v0.1.2：避免短信实际发送成功却显示 “operation aborted” 失败：发送确认等待延长到 30 秒，若手机端确认超时则显示“已提交/确认超时”的提示。
 - v0.1.1：修复网页 SIM/eSIM 下拉框在每 3 秒自动刷新后回到第一个选项的问题，选择后会保持固定。
 
@@ -55,12 +56,12 @@ Cass SMS Console :3000
 ghcr.io/yonggangg/cass-sms-console:latest
 ```
 
-当前 GHCR 镜像可直接拉取。v0.1.2 Release 也提供预构建 Docker image archive，作为离线安装备用。
+当前 GHCR 镜像可直接拉取。v0.1.3 Release 也提供预构建 Docker image archive，作为离线安装备用。
 
 ```bash
-curl -L -o cass-sms-console-v0.1.2-docker-image.tar.gz \
-  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.2/cass-sms-console-v0.1.2-docker-image.tar.gz
-gzip -dc cass-sms-console-v0.1.2-docker-image.tar.gz | docker load
+curl -L -o cass-sms-console-v0.1.3-docker-image.tar.gz \
+  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.3/cass-sms-console-v0.1.3-docker-image.tar.gz
+gzip -dc cass-sms-console-v0.1.3-docker-image.tar.gz | docker load
 ```
 
 ## Portainer 快速部署

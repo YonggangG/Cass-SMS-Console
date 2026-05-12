@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 let sims = [];
 let messages = [];
 let pollTimer = null;
+const SIM_SELECTION_KEY = 'cassSmsConsole.selectedSim';
 
 async function api(path, options) {
   const res = await fetch(path, options);
@@ -29,16 +30,22 @@ function escapeHtml(s) {
 
 function renderSims(status) {
   sims = status?.status?.sims || status?.sims || [];
-  $('sim').innerHTML = '';
+  const select = $('sim');
+  const selectedValue = select.value || localStorage.getItem(SIM_SELECTION_KEY);
+  select.innerHTML = '';
   if (!sims.length) {
-    $('sim').innerHTML = '<option value="-1">默认 SIM（未读取到 SIM/eSIM 列表）</option>';
+    select.innerHTML = '<option value="-1">默认 SIM（未读取到 SIM/eSIM 列表）</option>';
+    select.value = '-1';
     return;
   }
   for (const sim of sims) {
     const option = document.createElement('option');
     option.value = sim.subscriptionId;
     option.textContent = `${sim.displayName || 'SIM'} / ${sim.carrierName || ''} (#${sim.subscriptionId})`;
-    $('sim').appendChild(option);
+    select.appendChild(option);
+  }
+  if ([...select.options].some(option => option.value === selectedValue)) {
+    select.value = selectedValue;
   }
 }
 
@@ -122,6 +129,7 @@ async function sendSms() {
 $('sendBtn').addEventListener('click', sendSms);
 $('syncBtn').addEventListener('click', syncNow);
 $('filter').addEventListener('input', renderMessages);
+$('sim').addEventListener('change', () => localStorage.setItem(SIM_SELECTION_KEY, $('sim').value));
 
 refresh(true).catch(err => {
   setStatus(false, '初始化失败');

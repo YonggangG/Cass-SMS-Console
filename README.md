@@ -28,6 +28,10 @@ Android phone running Cass SMS Gateway :8080
 
 The phone still sends and receives SMS. This console is only the LAN-side web UI and local CSV backup service.
 
+## Release Notes
+
+- v0.1.1: Keep the selected SIM/eSIM fixed across automatic 3-second status refreshes.
+
 ## Docker Image
 
 Image tag:
@@ -36,12 +40,12 @@ Image tag:
 ghcr.io/yonggangg/cass-sms-console:latest
 ```
 
-The GHCR image can be pulled directly. The v0.1.0 GitHub Release also includes a prebuilt Docker image archive for offline installation.
+The GHCR image can be pulled directly. The v0.1.1 GitHub Release also includes a prebuilt Docker image archive for offline installation.
 
 ```bash
-curl -L -o cass-sms-console-v0.1.0-docker-image.tar.gz \
-  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.0/cass-sms-console-v0.1.0-docker-image.tar.gz
-gzip -dc cass-sms-console-v0.1.0-docker-image.tar.gz | docker load
+curl -L -o cass-sms-console-v0.1.1-docker-image.tar.gz \
+  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.1/cass-sms-console-v0.1.1-docker-image.tar.gz
+gzip -dc cass-sms-console-v0.1.1-docker-image.tar.gz | docker load
 ```
 
 ## Quick Start with Portainer

@@ -28,6 +28,10 @@ Cass SMS Console :3000
 
 手机仍然负责真正的短信发送和接收。本项目只是局域网网页控制台和本地 CSV 备份服务。
 
+## 版本说明
+
+- v0.1.1：修复网页 SIM/eSIM 下拉框在每 3 秒自动刷新后回到第一个选项的问题，选择后会保持固定。
+
 ## Docker 镜像
 
 镜像标签：
@@ -36,12 +40,12 @@ Cass SMS Console :3000
 ghcr.io/yonggangg/cass-sms-console:latest
 ```
 
-当前 GHCR 镜像可直接拉取。v0.1.0 Release 也提供预构建 Docker image archive，作为离线安装备用。
+当前 GHCR 镜像可直接拉取。v0.1.1 Release 也提供预构建 Docker image archive，作为离线安装备用。
 
 ```bash
-curl -L -o cass-sms-console-v0.1.0-docker-image.tar.gz \
-  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.0/cass-sms-console-v0.1.0-docker-image.tar.gz
-gzip -dc cass-sms-console-v0.1.0-docker-image.tar.gz | docker load
+curl -L -o cass-sms-console-v0.1.1-docker-image.tar.gz \
+  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.1/cass-sms-console-v0.1.1-docker-image.tar.gz
+gzip -dc cass-sms-console-v0.1.1-docker-image.tar.gz | docker load
 ```
 
 ## Portainer 快速部署

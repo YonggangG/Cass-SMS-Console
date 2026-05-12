@@ -30,8 +30,18 @@ The phone still sends and receives SMS. This console is only the LAN-side web UI
 
 ## Docker Image
 
+Image tag:
+
 ```text
 ghcr.io/yonggangg/cass-sms-console:latest
+```
+
+The v0.1.0 GitHub Release also includes a prebuilt Docker image archive. If direct GHCR pulling is unavailable, download and load the release asset on the target Docker host first.
+
+```bash
+curl -L -o cass-sms-console-v0.1.0-docker-image.tar.gz \
+  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.0/cass-sms-console-v0.1.0-docker-image.tar.gz
+gzip -dc cass-sms-console-v0.1.0-docker-image.tar.gz | docker load
 ```
 
 ## Quick Start with Portainer

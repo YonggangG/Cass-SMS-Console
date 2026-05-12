@@ -30,8 +30,18 @@ Cass SMS Console :3000
 
 ## Docker 镜像
 
+镜像标签：
+
 ```text
 ghcr.io/yonggangg/cass-sms-console:latest
+```
+
+当前 v0.1.0 Release 同时提供预构建 Docker image archive。若 GHCR 直接拉取不可用，可以先从 Release 下载并 `docker load` 到目标 Docker 主机。
+
+```bash
+curl -L -o cass-sms-console-v0.1.0-docker-image.tar.gz \
+  https://github.com/YonggangG/Cass-SMS-Console/releases/download/v0.1.0/cass-sms-console-v0.1.0-docker-image.tar.gz
+gzip -dc cass-sms-console-v0.1.0-docker-image.tar.gz | docker load
 ```
 
 ## Portainer 快速部署

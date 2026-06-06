@@ -24,6 +24,7 @@ Cass SMS Console 是 [Cass SMS Gateway](https://github.com/YonggangG/cass-sms-ga
 - 从手机读取并选择 active SIM/eSIM
 - 在局域网电脑网页上发送短信
 - 查看手机 Gateway 缓存的收/发短信记录
+- 从控制台列表中隐藏单条记录，但不删除 CSV 备份
 - 自动同步短信记录，并把新增记录追加写入本地 CSV
 - 支持直接运行 Node.js，也支持 Docker 容器部署
 - 包含 Portainer Stack 示例
@@ -44,6 +45,7 @@ Cass SMS Console :3000
 
 ## 版本说明
 
+- v0.1.5：每条记录增加删除按钮；删除后只从控制台列表隐藏，CSV 备份仍保留。
 - v0.1.4：短信发送请求提交后立即返回“已提交发送”，网页不再等待手机端确认。
 - v0.1.3：更稳地识别发送确认阶段的 abort，包括 “This operation was aborted” 这类运行时错误文案。
 - v0.1.2：避免短信实际发送成功却显示 “operation aborted” 失败：发送确认等待延长到 30 秒，若手机端确认超时则显示“已提交/确认超时”的提示。
@@ -176,6 +178,7 @@ http://localhost:3000
 | `CASS_PORT` | 控制台端口 | `3000` |
 | `CASS_SYNC_INTERVAL_MS` | 同步间隔，单位毫秒 | `3000` |
 | `CASS_CSV_PATH` | CSV 备份路径 | Docker 内默认为 `/data/sms-records.csv` |
+| `CASS_HIDDEN_MESSAGES_PATH` | 隐藏记录标记文件路径 | 默认与 CSV 文件同目录的 `hidden-message-ids.json` |
 
 ## CSV 备份格式
 
@@ -184,6 +187,7 @@ id,timestamp_iso,timestamp_ms,direction,phone,text,subscriptionId,status
 ```
 
 服务会定时从手机 Gateway 的 `/api/messages` 拉取记录，发现新记录后追加到 CSV 文件。
+在控制台删除记录时，只会把该记录 id 写入隐藏标记文件，不会删除 CSV 备份行。
 
 ## 本地构建镜像
 

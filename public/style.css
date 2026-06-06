@@ -13,6 +13,8 @@ label { display:block; margin:12px 0 6px; color:var(--muted); font-size:14px; }
 input, textarea, select { width:100%; border:1px solid var(--line); background:transparent; color:var(--text); border-radius:12px; padding:11px 12px; font:inherit; }
 button { border:0; border-radius:999px; padding:11px 18px; background:var(--accent); color:white; font-weight:700; cursor:pointer; }
 button:disabled { opacity:.55; cursor:not-allowed; }
+button.small { padding:7px 10px; font-size:12px; }
+button.danger { background:var(--bad); }
 .row { display:flex; gap:12px; align-items:center; margin-top:14px; }
 .between { justify-content:space-between; align-items:center; }
 .between h2 { margin:0; }

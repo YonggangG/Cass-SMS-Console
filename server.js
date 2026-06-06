@@ -11,7 +11,8 @@ const DEFAULT_CONFIG = {
   host: '0.0.0.0',
   port: 3000,
   syncIntervalMs: 3000,
-  csvPath: './data/sms-records.csv'
+  csvPath: './data/sms-records.csv',
+  hiddenMessagesPath: ''
 };
 
 const ENV_MAP = {
@@ -20,13 +21,15 @@ const ENV_MAP = {
   CASS_HOST: 'host',
   CASS_PORT: 'port',
   CASS_SYNC_INTERVAL_MS: 'syncIntervalMs',
-  CASS_CSV_PATH: 'csvPath'
+  CASS_CSV_PATH: 'csvPath',
+  CASS_HIDDEN_MESSAGES_PATH: 'hiddenMessagesPath'
 };
 
 let config = loadConfig();
 let lastStatus = { ok: false, error: 'Not checked yet', checkedAt: null };
 let lastMessages = [];
 let knownKeys = new Set();
+let hiddenMessageIds = new Set();
 let syncTimer = null;
 
 function loadConfig() {
@@ -46,6 +49,9 @@ function loadConfig() {
   const merged = { ...DEFAULT_CONFIG, ...fileConfig, ...envConfig };
   merged.port = Number(merged.port) || DEFAULT_CONFIG.port;
   merged.syncIntervalMs = Number(merged.syncIntervalMs) || DEFAULT_CONFIG.syncIntervalMs;
+  if (!merged.hiddenMessagesPath) {
+    merged.hiddenMessagesPath = path.join(path.dirname(merged.csvPath), 'hidden-message-ids.json');
+  }
   return merged;
 }
 
@@ -54,7 +60,8 @@ function publicConfig() {
     phoneBaseUrl: config.phoneBaseUrl,
     tokenConfigured: Boolean(config.token),
     syncIntervalMs: config.syncIntervalMs,
-    csvPath: config.csvPath
+    csvPath: config.csvPath,
+    hiddenMessagesPath: config.hiddenMessagesPath
   };
 }
 
@@ -88,6 +95,37 @@ function csvEscape(value) {
 
 function messageKey(m) {
   return [m.timestamp, m.direction, m.phone, m.subscriptionId, m.status, m.text].map(v => String(v ?? '')).join('|');
+}
+
+function hiddenMessagesPath() {
+  return path.resolve(ROOT, config.hiddenMessagesPath);
+}
+
+function loadHiddenMessages() {
+  const filePath = hiddenMessagesPath();
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  if (!fs.existsSync(filePath)) {
+    hiddenMessageIds = new Set();
+    return filePath;
+  }
+  try {
+    const raw = fs.readFileSync(filePath, 'utf8');
+    const ids = JSON.parse(raw || '[]');
+    hiddenMessageIds = new Set(Array.isArray(ids) ? ids.map(String).filter(Boolean) : []);
+  } catch (err) {
+    throw new Error(`Failed to read hidden messages file: ${err.message || String(err)}`);
+  }
+  return filePath;
+}
+
+function saveHiddenMessages() {
+  const filePath = hiddenMessagesPath();
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify([...hiddenMessageIds].sort(), null, 2) + '\n');
+}
+
+function visibleMessages() {
+  return lastMessages.filter(m => !hiddenMessageIds.has(messageKey(m)));
 }
 
 function ensureCsv() {
@@ -161,6 +199,7 @@ async function syncOnce() {
 
 function startSync() {
   ensureCsv();
+  loadHiddenMessages();
   syncOnce();
   if (syncTimer) clearInterval(syncTimer);
   syncTimer = setInterval(syncOnce, Math.max(1000, Number(config.syncIntervalMs) || 3000));
@@ -198,7 +237,15 @@ async function handleApi(req, res, url) {
       return sendJson(res, 200, data);
     }
     if (req.method === 'GET' && url.pathname === '/api/messages') {
-      return sendJson(res, 200, { messages: lastMessages, backup: publicConfig(), status: lastStatus });
+      return sendJson(res, 200, { messages: visibleMessages(), backup: publicConfig(), status: lastStatus });
+    }
+    if (req.method === 'POST' && url.pathname === '/api/messages/delete') {
+      const raw = await readBody(req);
+      const payload = JSON.parse(raw || '{}');
+      if (!payload.id) return sendJson(res, 400, { ok: false, error: 'id is required' });
+      hiddenMessageIds.add(String(payload.id));
+      saveHiddenMessages();
+      return sendJson(res, 200, { ok: true, hiddenCount: hiddenMessageIds.size });
     }
     if (req.method === 'POST' && url.pathname === '/api/send') {
       const raw = await readBody(req);

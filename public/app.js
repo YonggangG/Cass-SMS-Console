@@ -4,6 +4,10 @@ let messages = [];
 let pollTimer = null;
 const SIM_SELECTION_KEY = 'cassSmsConsole.selectedSim';
 
+function messageId(m) {
+  return [m.timestamp, m.direction, m.phone, m.subscriptionId, m.status, m.text].map(v => String(v ?? '')).join('|');
+}
+
 async function api(path, options) {
   const res = await fetch(path, options);
   const data = await res.json();
@@ -71,7 +75,18 @@ function renderMessages() {
       <td>${escapeHtml(m.subscriptionId)}</td>
       <td>${escapeHtml(m.status)}</td>
       <td class="body">${escapeHtml(m.text)}</td>
-    </tr>`).join('') || '<tr><td colspan="6">暂无记录</td></tr>';
+      <td><button class="danger small" data-delete-id="${escapeHtml(messageId(m))}">删除</button></td>
+    </tr>`).join('') || '<tr><td colspan="7">暂无记录</td></tr>';
+}
+
+async function deleteMessage(id) {
+  await api('/api/messages/delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id })
+  });
+  messages = messages.filter(m => messageId(m) !== id);
+  renderMessages();
 }
 
 async function refresh(live = false) {
@@ -132,6 +147,16 @@ $('sendBtn').addEventListener('click', sendSms);
 $('syncBtn').addEventListener('click', syncNow);
 $('filter').addEventListener('input', renderMessages);
 $('sim').addEventListener('change', () => localStorage.setItem(SIM_SELECTION_KEY, $('sim').value));
+$('messages').addEventListener('click', event => {
+  const button = event.target.closest('[data-delete-id]');
+  if (!button) return;
+  button.disabled = true;
+  deleteMessage(button.dataset.deleteId).catch(err => {
+    button.disabled = false;
+    setStatus(false, '删除失败');
+    $('statusDetail').textContent = err.message;
+  });
+});
 
 refresh(true).catch(err => {
   setStatus(false, '初始化失败');

@@ -46,6 +46,7 @@ The phone still sends and receives SMS. This console is only the LAN-side web UI
 
 ## Release Notes
 
+- v0.1.7: Fix adjacent duplicate display collapse for gateway retries with different timestamps.
 - v0.1.6: Collapse adjacent duplicate records in the console list while preserving the CSV backup.
 - v0.1.5: Add per-record delete buttons that hide records from the console while preserving the CSV backup.
 - v0.1.4: Return immediately after submitting an SMS send request; do not block the web UI waiting for phone-gateway confirmation.

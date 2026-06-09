@@ -97,6 +97,10 @@ function messageKey(m) {
   return [m.timestamp, m.direction, m.phone, m.subscriptionId, m.status, m.text].map(v => String(v ?? '')).join('|');
 }
 
+function visibleMessageKey(m) {
+  return [m.direction, m.phone, m.subscriptionId, m.status, m.text].map(v => String(v ?? '')).join('|');
+}
+
 function hiddenMessagesPath() {
   return path.resolve(ROOT, config.hiddenMessagesPath);
 }
@@ -132,7 +136,7 @@ function dedupeAdjacentMessages(messages) {
   const deduped = [];
   let previousKey = null;
   for (const message of messages) {
-    const key = messageKey(message);
+    const key = visibleMessageKey(message);
     if (key === previousKey) continue;
     deduped.push(message);
     previousKey = key;
@@ -318,4 +322,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { dedupeAdjacentMessages, messageKey };
+module.exports = { dedupeAdjacentMessages, messageKey, visibleMessageKey };

@@ -125,7 +125,19 @@ function saveHiddenMessages() {
 }
 
 function visibleMessages() {
-  return lastMessages.filter(m => !hiddenMessageIds.has(messageKey(m)));
+  return dedupeAdjacentMessages(lastMessages.filter(m => !hiddenMessageIds.has(messageKey(m))));
+}
+
+function dedupeAdjacentMessages(messages) {
+  const deduped = [];
+  let previousKey = null;
+  for (const message of messages) {
+    const key = messageKey(message);
+    if (key === previousKey) continue;
+    deduped.push(message);
+    previousKey = key;
+  }
+  return deduped;
 }
 
 function ensureCsv() {
@@ -297,9 +309,13 @@ const server = http.createServer((req, res) => {
   serveStatic(req, res, url);
 });
 
-startSync();
-server.listen(config.port, config.host, () => {
-  console.log(`Cass SMS PC Console running at http://${config.host}:${config.port}`);
-  console.log(`Gateway: ${config.phoneBaseUrl}`);
-  console.log(`CSV backup: ${path.resolve(ROOT, config.csvPath)}`);
-});
+if (require.main === module) {
+  startSync();
+  server.listen(config.port, config.host, () => {
+    console.log(`Cass SMS PC Console running at http://${config.host}:${config.port}`);
+    console.log(`Gateway: ${config.phoneBaseUrl}`);
+    console.log(`CSV backup: ${path.resolve(ROOT, config.csvPath)}`);
+  });
+}
+
+module.exports = { dedupeAdjacentMessages, messageKey };

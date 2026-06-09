@@ -24,6 +24,7 @@ Cass SMS Console 是 [Cass SMS Gateway](https://github.com/YonggangG/cass-sms-ga
 - 从手机读取并选择 active SIM/eSIM
 - 在局域网电脑网页上发送短信
 - 查看手机 Gateway 缓存的收/发短信记录
+- 控制台列表中相邻重复记录只显示一条
 - 从控制台列表中隐藏单条记录，但不删除 CSV 备份
 - 自动同步短信记录，并把新增记录追加写入本地 CSV
 - 支持直接运行 Node.js，也支持 Docker 容器部署
@@ -45,6 +46,7 @@ Cass SMS Console :3000
 
 ## 版本说明
 
+- v0.1.6：控制台列表中相邻重复记录只显示一条，CSV 备份仍保留原始记录。
 - v0.1.5：每条记录增加删除按钮；删除后只从控制台列表隐藏，CSV 备份仍保留。
 - v0.1.4：短信发送请求提交后立即返回“已提交发送”，网页不再等待手机端确认。
 - v0.1.3：更稳地识别发送确认阶段的 abort，包括 “This operation was aborted” 这类运行时错误文案。

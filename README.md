@@ -24,6 +24,7 @@ Cass SMS Console is a lightweight LAN web console for [Cass SMS Gateway](https:/
 - Read and select active SIM/eSIM subscriptions from the phone
 - Send SMS from a LAN web page
 - View received and sent SMS records cached by the phone gateway
+- Collapse adjacent duplicate records in the console list
 - Hide individual records from the console list without deleting the CSV backup
 - Automatically sync records and append new entries to a local CSV file
 - Runs as a simple Node.js service or Docker container
@@ -45,6 +46,7 @@ The phone still sends and receives SMS. This console is only the LAN-side web UI
 
 ## Release Notes
 
+- v0.1.6: Collapse adjacent duplicate records in the console list while preserving the CSV backup.
 - v0.1.5: Add per-record delete buttons that hide records from the console while preserving the CSV backup.
 - v0.1.4: Return immediately after submitting an SMS send request; do not block the web UI waiting for phone-gateway confirmation.
 - v0.1.3: More robustly detect send confirmation aborts, including Node/browser messages like "This operation was aborted".
